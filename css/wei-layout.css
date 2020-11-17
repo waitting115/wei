@@ -18,30 +18,30 @@ body {
     font-size: 14px;
     line-height: 1.42857143;
     color: #333;
-    background-color: #fff;
 }
 .wrapper {
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
+  width: 100%;
 }
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Layout */
 /* 移动端优先适配 */
-/* 平板 */
-@media (min-width: 768px) {
-    .wrapper {
+/* @media (min-width: 768px) {
+    .module {
         width: 750px;
     }
 }
-/* PC */
 @media (min-width: 992px) {
-    .wrapper {
+    .module {
         width: 970px;
     }
-}
-/* 大屏PC */
+} */
 @media (min-width: 1200px) {
-    .wrapper {
+    .container {
         width: 1170px;
     }
 }
@@ -230,4 +230,25 @@ body {
   .col-bpc-1 {
     width: 8.33333333%;
   }
+}
+
+/* Tools */
+/* 文本超出部分隐藏且以省略号形式表示 不可以用span标签 */
+.overflow-point {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* 添加左右内边距 */
+.lr-padding {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+/* 去除左右内边距 */
+.no-lr-padding {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.top-bar {
+  min-height: 20px;
 }
