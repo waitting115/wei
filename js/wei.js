@@ -1,5 +1,4 @@
 
-
 const wei = {
     handleEvent : {
         addEvent(target, type, callback) {
@@ -234,6 +233,33 @@ const wei = {
             return userAgent;
         }
     },
+    // 双向数据绑定
+    dataBinding(targetId, dataObj) {
+        function proxyBind (target) {
+            return new Proxy (target, {
+                get(obj, prop) {},
+                set(obj, prop, newValue) {
+                    // 更改数据
+                    obj[prop] = newValue;
+                    // 双向数据绑定
+                    document.getElementById(targetId).innerHTML = dataObj.data;
+                    console.log('a')
+                    return;
+                }
+            })
+        }
+        // 创建proxy实例
+        targetIdBind = proxyBind(dataObj);
+        console.log(targetIdBind)
+    }
+    // 防抖
+    // debounce : function (fn, delay) {
+    //     var timer = null;
+    //     return function () {
+    //         timer && clearInterval(timer);
+    //         setTimeout(fn, delay);
+    //     }
+    // }
     // 防抖
     // 节流
     
