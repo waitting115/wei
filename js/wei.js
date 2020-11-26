@@ -1,5 +1,5 @@
-
 const wei = {
+    // 事件绑定(兼容)
     handleEvent : {
         addEvent(target, type, callback) {
             if(target.addEventListener) {
@@ -24,6 +24,7 @@ const wei = {
             }
         }
     },
+    // 事件代理
     eventAgent : function (parentNode, childNode, eventType, callback) {
         if(parentNode.addEventListener) {
             parentNode.addEventListener(eventType, function (e)  {
