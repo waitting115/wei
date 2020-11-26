@@ -29,6 +29,7 @@ const wei = {
         if(parentNode.addEventListener) {
             parentNode.addEventListener(eventType, function (e)  {
                 let targetNode = e.target;
+                console.log(targetNode)
                 if(targetNode.nodeName.toLowerCase() === childNode) {
                     //将真正需要绑定监听事件的子节点传入回掉函数
                     callback(targetNode);
@@ -50,6 +51,23 @@ const wei = {
             }
         }
     },
+    // 阻止事件冒泡
+    stopBubble : function (e) {
+        if(e && e.stopPropagation) {
+            e.stopPropagation();
+        } else {
+            window.event.cancelBubble = true;
+        }
+    },
+    // 取消默认事件
+    cancelDefaultEvent : function (e) {
+        if(e && e.preventDefault ) {
+            e.preventDefault();
+        } else {
+            window.event.returnValue = false;
+        }
+    },
+    // (并不是任何时候都可以使用事件代理,如果希望的targetNode有子节点,那么点击到其子节点上面就不会触发targetNode的事件处理函数,这与事件冒泡是无关的,因为我们希望的节点根本就没有挂载上事件处理函数)
     // 页面滚动事件监听(兼容firefox)
     listenerScrollEvent: {
         // 监听向上/向下滑事件
