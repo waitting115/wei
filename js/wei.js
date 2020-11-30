@@ -2,15 +2,21 @@ const wei = {
     // 事件绑定(兼容)
     handleEvent : {
         addEvent(target, type, callback) {
-            if(target.addEventListener) {
-                target.addEventListener(type, callback, false);
-            }else if (target.attachEvent) {
-                target.attachEvent('on' + type, function () {
-                    callback.call(target);
-                })
+            // 防止target为null导致报错
+            if(target) {
+                if(target.addEventListener) {
+                    target.addEventListener(type, callback, false);
+                }else if (target.attachEvent) {
+                    target.attachEvent('on' + type, function () {
+                        callback.call(target);
+                    })
+                } else {
+                    element['on' + type] = handler;
+                }
             } else {
-                element['on' + type] = handler;
+                console.log(target + "元素并没有成功绑定事件处理函数,如果无碍,请忽略此消息!");    
             }
+            
         },
         removeEvent(target, type, callback) {
             if(target.removeEventListener) {
