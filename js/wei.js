@@ -158,10 +158,13 @@ const wei = {
     // ajax封装(兼容低版本IE)(目前只支持get和post)
     ajax : function (options)  {
         options = options || {};
+        options.url = options.url || '';
         options.type = (options.type || "GET").toUpperCase();//默认get
         options.dataType = options.dataType || 'json';//默认json
+        options.timeout = options.timeout || 5000;//默认有效时间5s
+        options.success = options.success || (() => {});
         options.formatParam = options.formatParam || false;//默认不格式化参数
-        options.data = !options.formatParam ? optionsd.data : function () {
+        options.data = !options.formatParam ? options.data : function () {
             var arr = [];
             for (var item in options.data) {
                 // 把字符串作为 URI 组件进行编码。 ://  -->  %3A%2F%2F
@@ -174,22 +177,22 @@ const wei = {
         var xhr;
         if(window.XMLHttpRequest) {
             xhr = new XMLHttpRequest();
-        } else if (window.ActiveXObject){
-            xhr = new ActiveXObject('Microsoft.XMLHTTP');
+        } else if (window.ActiveXObject){//兼容IE6以下版本
+            xhr = new ActiveXobject('Microsoft.XMLHTTP');
         }
 
-        if(method === 'GET' || method === 'get') {
-            if(data) {
-                url += '?';
-                url += data;
+        if(options.type === 'GET' || options.type === 'get') {
+            if(options.data) {
+                options.url += '?';
+                options.url += options.data;
             }
-            xhr.open('get', url, true);
+            xhr.open('get', options.url, true);
             xhr.send(null);
-        } else if (method === 'POST' || method === 'post') {
-            xhr.open('post', url, true);
+        } else if (options.type === 'POST' || options.type === 'post') {
+            xhr.open('post', options.url, true);
             xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-            if(data) {
-                xhr.send(data);
+            if(options.data) {
+                xhr.send(options.data);
             } else {
                 xhr.send(null);
             }
@@ -202,14 +205,14 @@ const wei = {
         setTimeout(function () {
             xhr.abort();
             console.log('请求超时!')
-        }, timeout)
+        }, options.timeout)
         
         xhr.onreadystatechange = function () {
-            if((status>=200&& status<300 || status==304) && this.readystate === 4) {
-                if(success) {
-                    success(this.responseText);
+            if(((this.status>=200 && this.status<300) || this.status === 304) && this.readystate === 4) {
+                if(this.success) {
+                    options.success(this.responseText);
                 } else {
-                    options.error&&options.error(status);
+                    options.error&&options.error(this.status);
                     console.error('请求出错啦,状态码为:',this.status);
                 }
                 return this.responseText;
@@ -259,24 +262,24 @@ const wei = {
         }
     },
     // 双向数据绑定
-    dataBinding(targetId, dataObj) {
-        function proxyBind (target) {
-            return new Proxy (target, {
-                get(obj, prop) {},
-                set(obj, prop, newValue) {
-                    // 更改数据
-                    obj[prop] = newValue;
-                    // 双向数据绑定
-                    document.getElementById(targetId).innerHTML = dataObj.data;
-                    console.log('a')
-                    return;
-                }
-            })
-        }
-        // 创建proxy实例
-        targetIdBind = proxyBind(dataObj);
-        console.log(targetIdBind)
-    }
+    // dataBinding(targetId, dataObj) {
+    //     function proxyBind (target) {
+    //         return new Proxy (target, {
+    //             get(obj, prop) {},
+    //             set(obj, prop, newValue) {
+    //                 // 更改数据
+    //                 obj[prop] = newValue;
+    //                 // 双向数据绑定
+    //                 document.getElementById(targetId).innerHTML = dataObj.data;
+    //                 console.log('a')
+    //                 return;
+    //             }
+    //         })
+    //     }
+    //     // 创建proxy实例
+    //     targetIdBind = proxyBind(dataObj);
+    //     console.log(targetIdBind)
+    // }
     // 防抖
     // debounce : function (fn, delay) {
     //     var timer = null;
